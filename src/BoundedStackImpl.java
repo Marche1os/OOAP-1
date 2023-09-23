@@ -3,8 +3,6 @@ import java.util.List;
 
 abstract class BoundedStack<T> {
     static final int DEFAULT_CAPACITY = 32;
-    static final int INIT_OK = 0;
-    static final int INIT_INVALID_CAPACITY = 1;
     static final int PUSH_OK = 0;
     static final int PUSH_FILLED = 1;
     static final int PUSH_NULL = 2;
@@ -15,11 +13,11 @@ abstract class BoundedStack<T> {
     static final int POP_EMPTY_STACK = 1;
     static final int POP_NULL = 2;
 
-    protected int initStatus = INIT_INVALID_CAPACITY;
+    protected int capacity;
+
     protected int pushStatus = PUSH_NULL;
     protected int peekStatus = PEEK_NULL;
     protected int popStatus = POP_NULL;
-    protected int capacity;
 
     abstract void push(final T value);
 
@@ -36,30 +34,46 @@ public class BoundedStackImpl<T> extends BoundedStack<T> {
 
     private List<T> stack;
 
+    /**
+     * пост-условие: создан новый стек с размером по-умолчанию (32)
+     */
     public BoundedStackImpl() {
         this(DEFAULT_CAPACITY);
     }
 
+    /**
+     * пост-условие: создан новый стек вместимостью @capacity
+     *
+     * @param capacity - максимальное количество элементов
+     */
     public BoundedStackImpl(final int capacity) {
-        this.capacity = capacity;
         if (capacity >= 1) {
             stack = new ArrayList<>(capacity);
-            initStatus = INIT_OK;
-            return;
+            this.capacity = capacity;
         }
-        initStatus = INIT_INVALID_CAPACITY;
+        if (capacity < 1) {
+            stack = new ArrayList<>(DEFAULT_CAPACITY);
+            this.capacity = DEFAULT_CAPACITY;
+        }
     }
 
+    //пред-условия: стек создан с валидным размером и не достиг верхней границы по вместимости
+    //пост-условие: элемент успешно добавлен в стек
     @Override
     public void push(final T value) {
-        if (stack.size() >= capacity || initStatus == INIT_INVALID_CAPACITY) {
+        if (stack.size() >= capacity) {
             pushStatus = PUSH_FILLED;
             return;
         }
         stack.add(value);
+
         pushStatus = PUSH_OK;
     }
 
+    /**
+     * пред-условие: стек не пуст
+     * пост-условие: последний элемент стека извлечен без удаления
+     */
     @Override
     public T peek() {
         if (stack.isEmpty()) {
@@ -73,6 +87,10 @@ public class BoundedStackImpl<T> extends BoundedStack<T> {
         return value;
     }
 
+    /**
+     * пред-условие: стек не пуст
+     * пост-условие: удален и возвращен верхний элемент стека. Пример: стек из элементов (1, 2, 3) операция pop() вернет 3
+     */
     @Override
     public T pop() {
         if (stack.isEmpty()) {
@@ -86,12 +104,12 @@ public class BoundedStackImpl<T> extends BoundedStack<T> {
         return value;
     }
 
+    /**
+     * пост-условие: стек очищен и не содержит элементов
+     */
     @Override
     public void clear() {
-        if (capacity >= 1) {
-            stack = new ArrayList<>(capacity);
-            initStatus = INIT_OK;
-        }
+        stack = new ArrayList<>(capacity);
         pushStatus = PUSH_NULL;
         peekStatus = PEEK_NULL;
         popStatus = POP_NULL;
@@ -100,10 +118,6 @@ public class BoundedStackImpl<T> extends BoundedStack<T> {
     @Override
     public int size() {
         return stack.size();
-    }
-
-    public int getInitStatus() {
-        return initStatus;
     }
 
     public int getPushStatus() {
