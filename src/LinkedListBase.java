@@ -7,28 +7,19 @@ abstract public class LinkedListBase<T> {
     static final int TAIL_EMPTY = 1;
     static final int TAIL_NULL = 2;
 
-    static final int RIGHT_OK = 0;
-    static final int RIGHT_LAST = 1; //команда вызвана, когда курсор находится на последнем элементе списка
-    static final int RIGHT_EMPTY = 2;
-    static final int RIGHT_NULL = 3; //команда не была вызвана
-
-    static final int PUT_RIGHT_OK = 0;
-    static final int PUT_RIGHT_NULL = 1; //команда put_right не была вызвана
-
-    static final int PUT_LEFT_OK = 0;
-    static final int PUT_LEFT_NULL = 1; //команда put_left не была вызвана
-
     static final int REMOVE_OK = 0;
     static final int REMOVE_EMPTY = 1; //удаление на пустом списке
     static final int REMOVE_NULL = 2;
     static final int REMOVE_CLEAR = 3; //удаление единственного узла - по-сути, очистка списка
 
+    static final int FIND_OK = 0;
+    static final int FIND_NOT_FOUND = 1; //искомое значение не найдено
+    static final int FIND_NULL = 2; //команда не была вызвана
+
     protected int headStatus = HEAD_NULL;
     protected int tailStatus = TAIL_NULL;
-    protected int rightStatus = RIGHT_NULL;
-    protected int putRightStatus = PUT_RIGHT_NULL;
-    protected int putLeftStatus = PUT_LEFT_NULL;
     protected int removeStatus = REMOVE_NULL;
+    protected int findStatus = FIND_NULL;
 
     //команды:
 
@@ -39,6 +30,19 @@ abstract public class LinkedListBase<T> {
     //предусловие: список не пуст
     //постусловие: курсор указывает на последний элемент списка
     abstract void tail();
+
+    //постусловие: элемент добавлен в конец списка
+    abstract void add_tail(final T value);
+
+    //постусловие: значение, хранимое в узле, заменено
+    abstract void replace(final T value);
+
+    //предусловие: список не пуст, искомое значение присутствует в списке
+    //постусловие: курсор указывает на следующий узел с искомым значением
+    abstract void find(final T value);
+
+    //постусловие: список не содержит узлов, хранящих переданное значение
+    abstract void remove_all(final T value);
 
     //предусловие: список не пуст и курсор на текущий элемент указывает не на последний элемент в списке
     //постусловие: курсор сместился на следующий элемент
@@ -73,6 +77,12 @@ abstract public class LinkedListBase<T> {
     //предусловие: курсор установлен на какой-либо элемент (список не пуст)
     abstract T get();
 
+    abstract boolean is_head();
+
+    abstract boolean is_tail();
+
+    abstract boolean is_value();
+
     int getHeadStatus() {
         return headStatus;
     }
@@ -81,19 +91,11 @@ abstract public class LinkedListBase<T> {
         return tailStatus;
     }
 
-    public int getRightStatus() {
-        return rightStatus;
-    }
-
-    public int getPutRightStatus() {
-        return putRightStatus;
-    }
-
-    public int getPutLeftStatus() {
-        return putLeftStatus;
-    }
-
     public int getRemoveStatus() {
         return removeStatus;
+    }
+
+    public int getFindStatus() {
+        return findStatus;
     }
 }
