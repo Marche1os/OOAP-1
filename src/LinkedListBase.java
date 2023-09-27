@@ -1,4 +1,34 @@
 abstract public class LinkedListBase<T> {
+    static final int HEAD_OK = 0;
+    static final int HEAD_EMPTY = 1; //список пуст
+    static final int HEAD_NULL = 2; // команда head не была вызвана
+
+    static final int TAIL_OK = 0;
+    static final int TAIL_EMPTY = 1;
+    static final int TAIL_NULL = 2;
+
+    static final int RIGHT_OK = 0;
+    static final int RIGHT_LAST = 1; //команда вызвана, когда курсор находится на последнем элементе списка
+    static final int RIGHT_EMPTY = 2;
+    static final int RIGHT_NULL = 3; //команда не была вызвана
+
+    static final int PUT_RIGHT_OK = 0;
+    static final int PUT_RIGHT_NULL = 1; //команда put_right не была вызвана
+
+    static final int PUT_LEFT_OK = 0;
+    static final int PUT_LEFT_NULL = 1; //команда put_left не была вызвана
+
+    static final int REMOVE_OK = 0;
+    static final int REMOVE_EMPTY = 1; //удаление на пустом списке
+    static final int REMOVE_NULL = 2;
+    static final int REMOVE_CLEAR = 3; //удаление единственного узла - по-сути, очистка списка
+
+    protected int headStatus = HEAD_NULL;
+    protected int tailStatus = TAIL_NULL;
+    protected int rightStatus = RIGHT_NULL;
+    protected int putRightStatus = PUT_RIGHT_NULL;
+    protected int putLeftStatus = PUT_LEFT_NULL;
+    protected int removeStatus = REMOVE_NULL;
 
     //команды:
 
@@ -42,4 +72,28 @@ abstract public class LinkedListBase<T> {
 
     //предусловие: курсор установлен на какой-либо элемент (список не пуст)
     abstract T get();
+
+    int getHeadStatus() {
+        return headStatus;
+    }
+
+    public int getTailStatus() {
+        return tailStatus;
+    }
+
+    public int getRightStatus() {
+        return rightStatus;
+    }
+
+    public int getPutRightStatus() {
+        return putRightStatus;
+    }
+
+    public int getPutLeftStatus() {
+        return putLeftStatus;
+    }
+
+    public int getRemoveStatus() {
+        return removeStatus;
+    }
 }
