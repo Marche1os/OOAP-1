@@ -80,7 +80,7 @@ abstract public class LinkedListBase<T> {
 
     abstract boolean is_value();
 
-    int getHeadStatus() {
+    public int getHeadStatus() {
         return headStatus;
     }
 
