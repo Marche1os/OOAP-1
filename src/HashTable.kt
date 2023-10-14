@@ -1,6 +1,7 @@
 interface HashTable<T> {
 
     // Конструктор
+    // постусловие: создана пустая таблица
     HashTable(maxSize: Int)
 
     // Команды:
